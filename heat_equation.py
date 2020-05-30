@@ -24,13 +24,14 @@ beta = 1.2         # parameter beta
 # Create mesh and define function space
 nx = ny = 8
 mesh = UnitSquareMesh(nx, ny)
+deg = 1
 plot(mesh)
 plt.show()
-V = FunctionSpace(mesh, 'P', 1)
+V = FunctionSpace(mesh, "Lagrange", deg)
 
 # Define boundary condition
 u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t',
-                 degree=2, alpha=alpha, beta=beta, t=0)
+                 degree = deg, alpha=alpha, beta=beta, t=0)
 
 def boundary(x, on_boundary):
     return on_boundary
