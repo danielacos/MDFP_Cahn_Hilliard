@@ -25,13 +25,15 @@ beta = 1.2         # parameter beta
 nx = ny = 8
 mesh = UnitSquareMesh(nx, ny)
 deg = 1
+
 plot(mesh)
 plt.show()
+
 V = FunctionSpace(mesh, "Lagrange", deg)
 
 # Define boundary condition
 u_D = Expression('1 + x[0]*x[0] + alpha*x[1]*x[1] + beta*t',
-                 degree = deg, alpha=alpha, beta=beta, t=0)
+                 degree = deg, alpha=alpha, beta=beta, t=0) # degree indicates projection degree of u_D onto the mesh
 
 def boundary(x, on_boundary):
     return on_boundary
@@ -39,12 +41,12 @@ def boundary(x, on_boundary):
 bc = DirichletBC(V, u_D, boundary)
 
 # Define initial value
-u_n = interpolate(u_D, V)
+u_n = interpolate(u_D, V) # Both interpolates u_D into V
 #u_n = project(u_D, V)
 
 # Define variational problem
-u = TrialFunction(V) # Función muda que sirve para definir la formulación variacional
-v = TestFunction(V) # Función muda que sirve para definir la formulación variacional
+u = TrialFunction(V) # Meaningless function used to define the variational formulation
+v = TestFunction(V) # Meaningless function used to define the variational formulation
 f = Constant(beta - 2 - 2*alpha)
 
 a = u*v*dx + dt*dot(grad(u), grad(v))*dx
@@ -74,6 +76,3 @@ for n in range(num_steps):
 
     # Update previous solution
     u_n.assign(u)
-
-# Hold plot
-# interactive()
