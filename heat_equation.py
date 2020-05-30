@@ -43,12 +43,13 @@ u_n = interpolate(u_D, V)
 #u_n = project(u_D, V)
 
 # Define variational problem
-u = TrialFunction(V)
-v = TestFunction(V)
+u = TrialFunction(V) # Función muda que sirve para definir la formulación variacional
+v = TestFunction(V) # Función muda que sirve para definir la formulación variacional
 f = Constant(beta - 2 - 2*alpha)
 
-F = u*v*dx + dt*dot(grad(u), grad(v))*dx - (u_n + dt*f)*v*dx
-a, L = lhs(F), rhs(F)
+a = u*v*dx + dt*dot(grad(u), grad(v))*dx
+L = (u_n + dt*f)*v*dx
+
 
 # Time-stepping
 u = Function(V)
