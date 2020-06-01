@@ -10,23 +10,9 @@ We will comupute the energy functional E=\int_\omega u^2 in each time step
 
 from __future__ import print_function
 from dolfin import *
-from mpi4py import MPI
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-
-# Class representing the intial conditions
-class IC(UserExpression):
-    def eval(self,values,x):
-        values[0] = 1.0*np.random() + 0.25
-    def value_shape(self):
-        return(1,)
-
-def u_init(x):
-    """Initialise values for c and mu."""
-    values = np.zeros((1, x.shape[1]))
-    values[0] = 0.63 + 0.02 * (0.5 - np.random.rand(x.shape[1]))
-    return values
 
 T = 2.0            # final time
 num_steps = 10     # number of time steps
@@ -52,16 +38,16 @@ def boundary(x, on_boundary):
 
 bc = DirichletBC(V, u_D, boundary)
 
-# Define initial value
-u_0 =  Expression('1.0*random() + 0.25', degree=deg)
+random.seed(867658767987)
+u_0 =  Expression('0.02*(0.5- rand())', degree=deg) # Random values between -0.01 and 0.01
 u_n = interpolate(u_0,V)
-plot(u_n)
+print('max = %f' % (u_n.vector().get_local().max()))
+print('min = %f' % (u_n.vector().get_local().min()))
+c = plot(u_n)
+plt.colorbar(c)
 plt.show()
 
 w_n = - eps**2 * div(grad(u_n)) + pow(u_0,3) - 3 * pow(u_0,2) + 2 * u_0
-
-
-
 plot(w_n)
 plt.show()
 
@@ -72,7 +58,7 @@ E = []
 u = TrialFunction(V) # Meaningless function used to define the variational formulation
 v = TestFunction(V) # Meaningless function used to define the variational formulation
 
-a = u*v*dx + dt*dot(grad(u), grad(v))*dx
+a1 = u*v*dx + dt*dot(grad(u), grad(v))*dx
 L = u_n*v*dx
 
 # Time-stepping
