@@ -5,7 +5,7 @@ Heat equation with Dirichlet homogeneous conditions.
   u = 0            on the boundary
   u = alpha*e^(x^2+y^2)            at t = 0
 
-We will comupute the energy functional E=\int_\omega u^2 in each time step
+We will comupute the energy functional E=\int_\omega u^2 in each time step.
 """
 
 from __future__ import print_function
