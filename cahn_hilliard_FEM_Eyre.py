@@ -17,7 +17,7 @@ T = 1.0            # final time
 num_steps = 50     # number of time steps
 dt = T / num_steps # time step size
 eps = 0.01
-gamma = 0.00001
+gamma = 1
 
 # Create mesh and define function space
 nx = ny = 100 # Boundary points
@@ -54,7 +54,7 @@ u = TrialFunction(W) # Meaningless function used to define the variational formu
 v = TestFunction(W) # Meaningless function used to define the variational formulation
 
 phi, w = split(u)
-barphi, barw = split(v)
+barw, barphi = split(v)
 
 a1 = phi * barw * dx + dt * gamma * dot(grad(w),grad(barw)) * dx
 L1 = phi_n * barw * dx
@@ -93,7 +93,7 @@ for n in range(num_steps):
 
 
     # Update previous solution
-    phi_n = phi
+    phi_n.assign(phi)
 
 #plt.plot(np.linspace(0,T,num_steps),E, color='red')
 #plt.title("Funcional de energía")
