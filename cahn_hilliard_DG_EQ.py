@@ -53,10 +53,10 @@ plt.show()
 
 print('mass = %f' % (assemble(phi_n*dx)))
 
-U_n = sqrt(0.25 * (pow(pow(phi_n,2)-1),2) + B)
+U_n = sqrt(0.25 * pow(pow(phi_n,2)-1,2) + B)
 
 # Define function H
-H = (pow(phi_n,3) - phi_n)/sqrt(0.25 * (pow(pow(phi_n,2)-1),2) + B)
+H = (pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2)-1,2) + B)
 
 print(H)
 
@@ -111,7 +111,7 @@ for n in range(num_steps):
 
     # Update previous solution
     U_n.assign(U_n + 0.5 * H * (phi - phi_n))
-    H = (pow(phi,3) - phi)/sqrt(0.25 * (pow(pow(phi,2)-1),2) + B)
+    H = (pow(phi,3) - phi)/sqrt(0.25 * pow(pow(phi,2)-1,2) + B)
     phi_n.assign(phi)
 
 pic = plot(phi)
