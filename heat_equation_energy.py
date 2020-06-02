@@ -8,7 +8,6 @@ Heat equation with Dirichlet homogeneous conditions.
 We will comupute the energy functional E=\int_\omega u^2 in each time step.
 """
 
-from __future__ import print_function
 from fenics import *
 from mshr import * # Paquete para crear las mallas
 import numpy as np

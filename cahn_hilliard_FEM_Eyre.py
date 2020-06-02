@@ -1,11 +1,16 @@
 """
-Heat equation with Dirichlet homogeneous conditions.
+Cahn-Hilliard equation with Neumann homogeneous conditions.
 
-  u'= Laplace(u) in the unit square
-  u = 0            on the boundary
-  u = alpha*e^(x^2+y^2)            at t = 0
+  phi'= gamma * Laplace(w)                          in the unit square
+  w = - epsilon^2 * Laplace(phi) + (phi^2-1)^2      in the unit square
+  grad(phi) * n = grad(w) * n = 0                   on the boundary
+  phi = random data between -0.01 and 0.01          at t = 0
 
-We will comupute the energy functional E=\int_\omega u^2 in each time step
+We will comupute the energy functional
+
+E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega (phi^2-1)^2
+
+in each time step.
 """
 
 from __future__ import print_function
@@ -31,7 +36,7 @@ P = FiniteElement("Lagrange", mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
 
 # Random initial data
-u_0 =  Expression(('0.02*(0.5- rand())','0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
+u_0 = Expression(('0.02*(0.5- rand())','0'), degree=deg) # Random values between -0.01 and 0.01
 u_n = interpolate(u_0,W)
 
 phi_n,w_n = u_n.split(True)
@@ -41,10 +46,7 @@ c = plot(phi_n)
 plt.colorbar(c)
 plt.show()
 
-w_n = - eps**2 * div(grad(phi_n)) + pow(phi_n,3)  + 2 * phi_n
-c = plot(w_n)
-plt.colorbar(c)
-plt.show()
+print('mass = %f' % (assemble(phi_n*dx)))
 
 # Define the energy vector
 E = []
@@ -79,30 +81,25 @@ for n in range(num_steps):
     phi, w = u.split(True)
 
     # Plot solution
-    #pic = plot(phi)
-    # ,mode='color')
-    #plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
-    #plt.colorbar(pic)
-    #plt.show()
+    pic = plot(phi,mode='color')
+    plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
+    plt.colorbar(pic)
+    plt.show()
 
+    # Compute the mass
+    print('mass = %f' % (assemble(phi*dx)))
 
     # Compute the energy
-    #energy = assemble(0.5*u*u*dx)
-    #E.append(energy)
-    #print('E =',energy)
+    energy = assemble(0.5*pow(eps,2)*dot(grad(phi),grad(phi))*dx + pow(pow(phi,2)-1,2)*dx)
+    E.append(energy)
+    print('E =',energy)
 
 
     # Update previous solution
     phi_n.assign(phi)
 
-#plt.plot(np.linspace(0,T,num_steps),E, color='red')
-#plt.title("Funcional de energía")
-#plt.xlabel("Tiempo")
-#plt.ylabel("Energía")
-#plt.show()
-print('max = %f' % (phi.vector().get_local().max()))
-pic = plot(phi)
-# ,mode='color')
-plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
-plt.colorbar(pic)
+plt.plot(np.linspace(0,T,num_steps),E, color='red')
+plt.title("Funcional de energía")
+plt.xlabel("Tiempo")
+plt.ylabel("Energía")
 plt.show()
