@@ -17,17 +17,17 @@ from dolfin import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 1.0            # final time
-num_steps = 20     # number of time steps
+T = 0.01            # final time
+num_steps = 1000     # number of time steps
 dt = T / num_steps # time step size
-eps = Constant(0.01)
+eps = Constant(0.1)
 gamma = Constant(1.0)
 sigma = Constant(10.0) # penalty parameter
 B  = Constant(1.0)
 
 # Create mesh and define function space
-nx = ny = 60 # Boundary points
-mesh = UnitSquareMesh(nx,ny)
+nx = ny = 7 # Boundary points
+mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
 
 plot(mesh)
 plt.show()
@@ -40,11 +40,14 @@ V = FunctionSpace(mesh, P)
 n = FacetNormal(mesh)
 h = CellDiameter(mesh)
 
-# Random initial data
-phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
-phi_n = interpolate(phi_0,V)
+# Source term
+g1 = Expression('0.1 * exp(-t * 4) * sin(x[0]/2) * sin(x[1]/2)', degree = deg, t=0)
+g2 = Expression('pow(0.1 * exp(-t * 4) * cos(x[0]/2) * sin(x[1]/2),2) + pow(0.1 * exp(-t * 4) * sin(x[0]/2) * cos(x[1]/2),2)',degree=deg, t=0)
+s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * g1 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps)
 
-#phi_n,w_n = u_n.split(True)
+# Initial data
+
+phi_n = interpolate(g1,V)
 print('max = %f' % (phi_n.vector().get_local().max()))
 print('min = %f' % (phi_n.vector().get_local().min()))
 c = plot(phi_n)
@@ -73,7 +76,7 @@ a1 = phi * barw * dx \
     - dot(avg(grad(w)),n('+'))*jump(barw) * dS \
     - dot(avg(grad(barw)),n('+'))*jump(w) * dS \
     + sigma/h('+') * dot(jump(w), jump(barw)) * dS)
-L1 = phi_n * barw * dx
+L1 = phi_n * barw * dx + dt * s * barw * dx
 
 a2 = w * barphi * dx \
     - pow(eps,2) * (dot(grad(phi),grad(barphi))*dx \
@@ -95,6 +98,9 @@ for i in range(num_steps):
 
     # Update current time
     t += dt
+
+    g1.t = t
+    g2.t = t
 
     # Compute solution
     solve(a == L, u)
@@ -129,6 +135,9 @@ pic = plot(phi)
 plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
+
+print("Error = %f" %(assemble(pow(phi-g1,2)*dx)))
+
 plt.plot(np.linspace(0,T,num_steps),E, color='red')
 plt.title("Funcional de energía")
 plt.xlabel("Tiempo")
