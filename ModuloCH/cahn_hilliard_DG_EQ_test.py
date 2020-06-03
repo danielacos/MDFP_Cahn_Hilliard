@@ -19,16 +19,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def test():
-    T = 0.01            # final time
-    num_steps = 1000     # number of time steps
+    T = 1            # final time
+    num_steps = 2000     # number of time steps
     dt = T / num_steps # time step size
     eps = Constant(0.1)
     gamma = Constant(1.0)
-    sigma = Constant(10.0) # penalty parameter
+    sigma = Constant(3.0) # penalty parameter
     B  = Constant(1.0)
 
+    print("dt = %f"  %(dt))
+
     # Create mesh and define function space
-    nx = ny = 7 # Boundary points
+    nx = ny = 70 # Boundary points
+    print("nx = ny = %d" %(nx))
+
     mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
 
     plot(mesh)
@@ -102,6 +106,8 @@ def test():
 
     for i in range(num_steps):
 
+        print("\nIteración %d:" %(i))
+
         # Update current time
         t += dt
 
@@ -119,7 +125,7 @@ def test():
 
         # Plot solution
         #pic = plot(phi)
-        #plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
+        #plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
         #plt.colorbar(pic)
         #plt.show()
 
@@ -138,7 +144,12 @@ def test():
         print('E =',energy)
 
     pic = plot(phi)
-    plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
+    plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
+    plt.colorbar(pic)
+    plt.show()
+
+    pic = plot(interpolate(g1,V))
+    plt.title("Solución exacta en t = %.2f" %(t))
     plt.colorbar(pic)
     plt.show()
 

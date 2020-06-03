@@ -27,8 +27,12 @@ gamma = Constant(1.0)
 sigma = Constant(10.0) # penalty parameter
 B  = Constant(1.0)
 
+print("dt = %d", %(dt))
+
 # Create mesh and define function space
 nx = ny = 7 # Boundary points
+print("nx = ny = %f" %(nx))
+
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
 
 plot(mesh)
@@ -102,6 +106,8 @@ print("Iteraciones:")
 
 for i in range(num_steps):
 
+    print("\nIteración %d:" %(i))
+
     # Update current time
     t += dt
 
@@ -138,7 +144,7 @@ for i in range(num_steps):
     print('E =',energy)
 
 pic = plot(phi)
-plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
+plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
 

@@ -27,8 +27,12 @@ def test():
     eps = 0.01
     gamma = 1
 
+    print("dt = %f" %(dt))
+
     # Create mesh and define function space
     nx = ny = 100 # Boundary points
+    print("nx = ny = %d" %(nx))
+
     mesh = UnitSquareMesh(nx,ny)
 
     plot(mesh)
@@ -77,8 +81,10 @@ def test():
     t = 0
 
     print("Iteraciones:")
-    
+
     for n in range(num_steps):
+
+        print("\nIteración %d:" %(n))
 
         # Update current time
         t += dt
@@ -90,7 +96,7 @@ def test():
 
         # Plot solution
         pic = plot(phi,mode='color')
-        plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
+        plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
         plt.colorbar(pic)
         plt.show()
 

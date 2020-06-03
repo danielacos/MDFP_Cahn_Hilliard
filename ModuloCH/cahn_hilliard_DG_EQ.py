@@ -21,16 +21,20 @@ import matplotlib.pyplot as plt
 
 
 def test():
-    T = 1.0            # final time
-    num_steps = 20     # number of time steps
+    T = 1            # final time
+    num_steps = 1000     # number of time steps
     dt = T / num_steps # time step size
     eps = Constant(0.01)
     gamma = Constant(1.0)
     sigma = Constant(10.0) # penalty parameter
     B  = Constant(1.0)
 
+    print("dt = %f" %(dt))
+
     # Create mesh and define function space
     nx = ny = 60 # Boundary points
+    print("nx = ny = %d" %(nx))
+
     mesh = UnitSquareMesh(nx,ny)
 
     plot(mesh)
@@ -54,7 +58,7 @@ def test():
     plt.title("Condición inicial")
     plt.colorbar(c)
     plt.show()
-    
+
     print('max = %f' % (phi_n.vector().get_local().max()))
     print('min = %f' % (phi_n.vector().get_local().min()))
     print('mass = %f' % (assemble(phi_n*dx)))
@@ -101,6 +105,8 @@ def test():
 
     for i in range(num_steps):
 
+        print("\nIteración %d:" %(i))
+
         # Update current time
         t += dt
 
@@ -114,10 +120,10 @@ def test():
         #fa.assign([phi, w], u)
 
         # Plot solution
-        #pic = plot(phi)
-        #plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
-        #plt.colorbar(pic)
-        #plt.show()
+        pic = plot(phi)
+        plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
+        plt.colorbar(pic)
+        plt.show()
 
         # Compute the mass
         print('mass = %f' % (assemble(phi * dx)))
@@ -134,7 +140,7 @@ def test():
         print('E =',energy)
 
     pic = plot(phi)
-    plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
+    plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
     plt.colorbar(pic)
     plt.show()
     plt.plot(np.linspace(0,T,num_steps),E, color='red')
