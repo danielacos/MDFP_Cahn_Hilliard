@@ -1,7 +1,7 @@
 """
 Cahn-Hilliard equation with Neumann homogeneous conditions.
 
-  phi'= gamma * Laplace(w)                          in the unit square
+  phi'= gamma * Laplace(w) + s(x,t)                 in the unit square
   w = - epsilon^2 * Laplace(phi) + (phi^2-1)^2      in the unit square
   grad(phi) * n = grad(w) * n = 0                   on the boundary
   phi = random data between -0.01 and 0.01          at t = 0
@@ -11,6 +11,8 @@ We will comupute the energy functional
 E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega (phi^2-1)^2
 
 in each time step.
+
+DG semidiscrete space scheme and EQ semidicrete time scheme
 """
 
 from dolfin import *
@@ -41,19 +43,21 @@ n = FacetNormal(mesh)
 h = CellDiameter(mesh)
 
 # Source term
-g1 = Expression('0.1 * exp(-t * 4) * sin(x[0]/2) * sin(x[1]/2)', degree = deg, t=0)
+g1 = Expression('0.1 * exp(-t * 4) * sin(x[0]/2) * sin(x[1]/2)', degree = deg, t=0) # exact solution
 g2 = Expression('pow(0.1 * exp(-t * 4) * cos(x[0]/2) * sin(x[1]/2),2) + pow(0.1 * exp(-t * 4) * sin(x[0]/2) * cos(x[1]/2),2)',degree=deg, t=0)
-s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * g1 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps)
+s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * g1 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
 
 # Initial data
 
 phi_n = interpolate(g1,V)
-print('max = %f' % (phi_n.vector().get_local().max()))
-print('min = %f' % (phi_n.vector().get_local().min()))
+
 c = plot(phi_n)
+plt.title("Condición inicial")
 plt.colorbar(c)
 plt.show()
 
+print('max = %f' % (phi_n.vector().get_local().max()))
+print('min = %f' % (phi_n.vector().get_local().min()))
 print('mass = %f' % (assemble(phi_n*dx)))
 
 U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
@@ -93,6 +97,8 @@ L = L1 + L2
 # Time-stepping
 u = Function(W)
 t = 0
+
+print("Iteraciones:")
 
 for i in range(num_steps):
 
@@ -136,7 +142,7 @@ plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
 
-print("Error = %f" %(assemble(pow(phi-g1,2)*dx)))
+print("Error en norma L2 = %f" %(assemble(pow(phi-g1,2)*dx)))
 
 plt.plot(np.linspace(0,T,num_steps),E, color='red')
 plt.title("Funcional de energía")

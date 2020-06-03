@@ -11,6 +11,8 @@ We will comupute the energy functional
 E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega (phi^2-1)^2
 
 in each time step.
+
+DG semidiscrete space scheme and EQ semidicrete time scheme
 """
 
 from dolfin import *
@@ -45,12 +47,14 @@ phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -
 phi_n = interpolate(phi_0,V)
 
 #phi_n,w_n = u_n.split(True)
-print('max = %f' % (phi_n.vector().get_local().max()))
-print('min = %f' % (phi_n.vector().get_local().min()))
+
 c = plot(phi_n)
+plt.title("Condición inicial")
 plt.colorbar(c)
 plt.show()
 
+print('max = %f' % (phi_n.vector().get_local().max()))
+print('min = %f' % (phi_n.vector().get_local().min()))
 print('mass = %f' % (assemble(phi_n*dx)))
 
 U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
@@ -90,6 +94,8 @@ L = L1 + L2
 # Time-stepping
 u = Function(W)
 t = 0
+
+print("Iteraciones:")
 
 for i in range(num_steps):
 

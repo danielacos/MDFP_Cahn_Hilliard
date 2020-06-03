@@ -11,6 +11,8 @@ We will comupute the energy functional
 E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega (phi^2-1)^2
 
 in each time step.
+
+FEM semidiscrete space scheme and EQ semidicrete time scheme
 """
 
 from __future__ import print_function
@@ -40,12 +42,14 @@ u_0 = Expression(('0.02*(0.5- rand())','0'), degree=deg) # Random values between
 u_n = interpolate(u_0,W)
 
 phi_n,w_n = u_n.split(True)
-print('max = %f' % (phi_n.vector().get_local().max()))
-print('min = %f' % (phi_n.vector().get_local().min()))
+
 c = plot(phi_n)
+plt.title("Condición inicial")
 plt.colorbar(c)
 plt.show()
 
+print('max = %f' % (phi_n.vector().get_local().max()))
+print('min = %f' % (phi_n.vector().get_local().min()))
 print('mass = %f' % (assemble(phi_n*dx)))
 
 # Define the energy vector
@@ -70,6 +74,9 @@ L = L1 + L2
 # Time-stepping
 u = Function(W)
 t = 0
+
+print("Iteraciones:")
+
 for n in range(num_steps):
 
     # Update current time

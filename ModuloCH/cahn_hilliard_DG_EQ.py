@@ -1,7 +1,7 @@
 """
 Cahn-Hilliard equation with Neumann homogeneous conditions.
 
-  phi'= gamma * Laplace(w) + s(x,t)                 in the unit square
+  phi'= gamma * Laplace(w)                          in the unit square
   w = - epsilon^2 * Laplace(phi) + (phi^2-1)^2      in the unit square
   grad(phi) * n = grad(w) * n = 0                   on the boundary
   phi = random data between -0.01 and 0.01          at t = 0
@@ -14,22 +14,24 @@ in each time step.
 
 DG semidiscrete space scheme and EQ semidicrete time scheme
 """
+
 from dolfin import *
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def test():
-    T = 0.01            # final time
-    num_steps = 1000     # number of time steps
+    T = 1.0            # final time
+    num_steps = 20     # number of time steps
     dt = T / num_steps # time step size
-    eps = Constant(0.1)
+    eps = Constant(0.01)
     gamma = Constant(1.0)
     sigma = Constant(10.0) # penalty parameter
     B  = Constant(1.0)
 
     # Create mesh and define function space
-    nx = ny = 7 # Boundary points
-    mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
+    nx = ny = 60 # Boundary points
+    mesh = UnitSquareMesh(nx,ny)
 
     plot(mesh)
     plt.show()
@@ -42,20 +44,17 @@ def test():
     n = FacetNormal(mesh)
     h = CellDiameter(mesh)
 
-    # Source term
-    g1 = Expression('0.1 * exp(-t * 4) * sin(x[0]/2) * sin(x[1]/2)', degree = deg, t=0) # exact solution
-    g2 = Expression('pow(0.1 * exp(-t * 4) * cos(x[0]/2) * sin(x[1]/2),2) + pow(0.1 * exp(-t * 4) * sin(x[0]/2) * cos(x[1]/2),2)',degree=deg, t=0)
-    s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * g1 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
+    # Random initial data
+    phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
+    phi_n = interpolate(phi_0,V)
 
-    # Initial data
-
-    phi_n = interpolate(g1,V)
+    #phi_n,w_n = u_n.split(True)
 
     c = plot(phi_n)
     plt.title("Condición inicial")
     plt.colorbar(c)
     plt.show()
-
+    
     print('max = %f' % (phi_n.vector().get_local().max()))
     print('min = %f' % (phi_n.vector().get_local().min()))
     print('mass = %f' % (assemble(phi_n*dx)))
@@ -80,7 +79,7 @@ def test():
         - dot(avg(grad(w)),n('+'))*jump(barw) * dS \
         - dot(avg(grad(barw)),n('+'))*jump(w) * dS \
         + sigma/h('+') * dot(jump(w), jump(barw)) * dS)
-    L1 = phi_n * barw * dx + dt * s * barw * dx
+    L1 = phi_n * barw * dx
 
     a2 = w * barphi * dx \
         - pow(eps,2) * (dot(grad(phi),grad(barphi))*dx \
@@ -104,9 +103,6 @@ def test():
 
         # Update current time
         t += dt
-
-        g1.t = t
-        g2.t = t
 
         # Compute solution
         solve(a == L, u)
@@ -141,9 +137,6 @@ def test():
     plt.title("Ecuación del Cahn-Hilliard en t = %.2f" %(t))
     plt.colorbar(pic)
     plt.show()
-
-    print("Error en norma L2 = %f" %(assemble(pow(phi-g1,2)*dx)))
-
     plt.plot(np.linspace(0,T,num_steps),E, color='red')
     plt.title("Funcional de energía")
     plt.xlabel("Tiempo")
