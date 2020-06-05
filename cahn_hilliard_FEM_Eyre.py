@@ -15,7 +15,6 @@ in each time step.
 FEM semidiscrete space scheme and EQ semidicrete time scheme
 """
 
-from __future__ import print_function
 from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -40,12 +39,11 @@ plt.show()
 deg = 1 # Degree of polynomials in discrete space
 P = FiniteElement("Lagrange", mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
+V = FunctionSpace(mesh, P)
 
 # Random initial data
-u_0 = Expression(('0.02*(0.5- rand())','0'), degree=deg) # Random values between -0.01 and 0.01
-u_n = interpolate(u_0,W)
-
-phi_n,w_n = u_n.split(True)
+phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
+phi_n = interpolate(phi_0,V)
 
 c = plot(phi_n)
 plt.title("Condición inicial")
@@ -94,7 +92,7 @@ for n in range(num_steps):
     phi, w = u.split(True)
 
     # Plot solution
-    pic = plot(phi,mode='color')
+    pic = plot(phi)
     plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
     plt.colorbar(pic)
     plt.show()

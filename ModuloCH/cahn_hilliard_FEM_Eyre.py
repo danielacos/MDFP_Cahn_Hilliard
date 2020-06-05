@@ -15,7 +15,6 @@ in each time step.
 FEM semidiscrete space scheme and EQ semidicrete time scheme
 """
 
-from __future__ import print_function
 from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,10 +40,11 @@ def test():
     deg = 1 # Degree of polynomials in discrete space
     P = FiniteElement("Lagrange", mesh.ufl_cell(), deg) # Space of polynomials
     W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
+    V = FunctionSpace(mesh, P)
 
     # Random initial data
-    u_0 = Expression(('0.02*(0.5- rand())','0'), degree=deg) # Random values between -0.01 and 0.01
-    u_n = interpolate(u_0,W)
+    phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
+    phi_n = interpolate(phi_0,V)
 
     phi_n,w_n = u_n.split(True)
 
