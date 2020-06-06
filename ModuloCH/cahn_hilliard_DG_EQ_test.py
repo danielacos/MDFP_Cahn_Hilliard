@@ -4,7 +4,7 @@ Cahn-Hilliard equation with Neumann homogeneous conditions.
   phi'= gamma * Laplace(w) + s(x,t)                 in the unit square
   w = - epsilon^2 * Laplace(phi) + (phi^2-1)^2      in the unit square
   grad(phi) * n = grad(w) * n = 0                   on the boundary
-  phi = random data between -0.01 and 0.01          at t = 0
+  phi = 0.1 * sin(0.5 * x[0]) * sin(0.5 * x[1]      at t = 0
 
 We will comupute the energy functional
 
