@@ -27,7 +27,7 @@ gamma = Constant(1.0)
 sigma = Constant(10.0) # penalty parameter
 B  = Constant(1.0)
 
-print("dt = %d", %(dt))
+print("dt = %d" %(dt))
 
 # Create mesh and define function space
 nx = ny = 7 # Boundary points
