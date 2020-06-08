@@ -2,9 +2,11 @@
 Cahn-Hilliard equation with Neumann homogeneous conditions.
 
   phi'= gamma * Laplace(w)                          in the unit square
-  w = - epsilon^2 * Laplace(phi) + (phi^2-1)^2      in the unit square
+  w = - epsilon^2 * Laplace(phi) + F'(phi)          in the unit square
   grad(phi) * n = grad(w) * n = 0                   on the boundary
   phi = random data between -0.01 and 0.01          at t = 0
+
+where F(phi) = (phi^2-1)^2.
 
 We will comupute the energy functional
 
