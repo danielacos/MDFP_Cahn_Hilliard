@@ -59,6 +59,9 @@ def test():
 
     # Define the energy vector
     E = []
+    energy = assemble(0.5*pow(eps,2)*dot(grad(phi_n),grad(phi_n))*dx + pow(pow(phi_n,2)-1,2)*dx)
+    E.append(energy)
+    print('E =',energy)
 
     # Define variational problem
     u = TrialFunction(W) # Meaningless function used to define the variational formulation
@@ -103,16 +106,15 @@ def test():
         # Compute the mass
         print('mass = %f' % (assemble(phi*dx)))
 
+        # Update previous solution
+        phi_n.assign(phi)
+
         # Compute the energy
         energy = assemble(0.5*pow(eps,2)*dot(grad(phi),grad(phi))*dx + pow(pow(phi,2)-1,2)*dx)
         E.append(energy)
         print('E =',energy)
 
-
-        # Update previous solution
-        phi_n.assign(phi)
-
-    plt.plot(np.linspace(0,T,num_steps),E, color='red')
+    plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
     plt.title("Funcional de energía")
     plt.xlabel("Tiempo")
     plt.ylabel("Energía")

@@ -45,6 +45,9 @@ u_n = interpolate(u_0, V) # Both interpolates u_D into V
 
 # Define the energy vector
 E = []
+energy = assemble(0.5*u_n*u_n*dx)
+E.append(energy)
+print('E =',energy)
 
 # Define variational problem
 u = TrialFunction(V) # Meaningless function used to define the variational formulation
@@ -81,7 +84,7 @@ for n in range(num_steps):
     # Update previous solution
     u_n.assign(u)
 
-plt.plot(np.linspace(0,T,num_steps),E, color='red')
+plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
 plt.title("Funcional de energía")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")

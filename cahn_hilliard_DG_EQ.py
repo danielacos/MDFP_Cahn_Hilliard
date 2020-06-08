@@ -68,6 +68,10 @@ H = project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define the energy vector
 E = []
+energy = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + pow(U_n,2) * dx)
+E.append(energy)
+print('E =',energy)
+
 
 # Define variational problem
 u = TrialFunction(W) # Meaningless function used to define the variational formulation
@@ -141,7 +145,7 @@ pic = plot(phi)
 plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
-plt.plot(np.linspace(0,T,num_steps),E, color='red')
+plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
 plt.title("Funcional de energía")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")

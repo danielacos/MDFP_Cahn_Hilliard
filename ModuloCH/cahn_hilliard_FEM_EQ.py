@@ -66,6 +66,9 @@ def test():
 
     # Define the energy vector
     E = []
+    energy = assemble(0.5*pow(eps,2)*dot(grad(phi_n),grad(phi_n))*dx + pow(U_n,2) * dx)
+    E.append(energy)
+    print('E =',energy)
 
     # Define variational problem
     u = TrialFunction(W) # Meaningless function used to define the variational formulation
@@ -129,7 +132,7 @@ def test():
     plt.show()
 
 
-    plt.plot(np.linspace(0,T,num_steps),E, color='red')
+    plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
     plt.title("Funcional de energía")
     plt.xlabel("Tiempo")
     plt.ylabel("Energía")
