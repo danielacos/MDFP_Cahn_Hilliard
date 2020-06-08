@@ -10,7 +10,7 @@ where F(phi) = (phi^2-1)^2.
 
 We will comupute the energy functional
 
-E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega (phi^2-1)^2
+E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega U^2
 
 in each time step.
 
