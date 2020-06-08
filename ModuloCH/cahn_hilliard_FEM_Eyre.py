@@ -14,7 +14,7 @@ E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega (phi^2-1)^2
 
 in each time step.
 
-FEM semidiscrete space scheme and EQ semidicrete time scheme
+FEM semidiscrete space scheme and Eyre semidicrete time scheme
 """
 
 from fenics import *
