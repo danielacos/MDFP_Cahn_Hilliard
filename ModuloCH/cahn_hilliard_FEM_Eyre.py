@@ -46,8 +46,6 @@ def test():
     phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
     phi_n = interpolate(phi_0,V)
 
-    phi_n,w_n = u_n.split(True)
-
     c = plot(phi_n)
     plt.title("Condición inicial")
     plt.colorbar(c)
