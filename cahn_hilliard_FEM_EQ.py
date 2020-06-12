@@ -49,7 +49,7 @@ V = FunctionSpace(mesh, P)
 random.seed(1)
 class Init_u(UserExpression):
     def eval(self, values, x):
-        values[0] = random.uniform(-0.01,0.01) # Random values between -0.01 and 0.01
+        values[0] = random.uniform(-0.01,0.01)
 
 phi_0 = Init_u(degree=deg) # Random values between -0.01 and 0.01
 phi_n = interpolate(phi_0,V)
