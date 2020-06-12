@@ -50,7 +50,11 @@ h = CellDiameter(mesh)
 
 # Random initial data
 random.seed(1)
-phi_0 = Expression(('0.02*(0.5- rand())'), degree=deg) # Random values between -0.01 and 0.01
+class Init_u(UserExpression):
+    def eval(self, values, x):
+        values[0] = random.uniform(-0.01,0.01) # Random values between -0.01 and 0.01
+
+phi_0 = Init_u(degree=deg)
 phi_n = interpolate(phi_0,V)
 
 c = plot(phi_n)
