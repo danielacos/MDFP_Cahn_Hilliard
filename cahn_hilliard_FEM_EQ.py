@@ -17,8 +17,8 @@ in each time step.
 FEM semidiscrete space scheme and EQ semidicrete time scheme
 """
 
-from __future__ import print_function
 from fenics import *
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 

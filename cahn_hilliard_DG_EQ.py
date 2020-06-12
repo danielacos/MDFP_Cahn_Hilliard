@@ -17,7 +17,8 @@ in each time step.
 DG semidiscrete space scheme and EQ semidicrete time scheme
 """
 
-from dolfin import *
+from fenics import *
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 

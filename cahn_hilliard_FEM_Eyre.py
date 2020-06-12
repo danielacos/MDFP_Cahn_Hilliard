@@ -18,6 +18,7 @@ FEM semidiscrete space scheme and Eyre semidicrete time scheme
 """
 
 from fenics import *
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 
