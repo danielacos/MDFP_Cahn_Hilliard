@@ -30,12 +30,12 @@ gamma = Constant(1.0)
 sigma = Constant(4.0) # penalty parameter
 B  = Constant(1.0)
 
-savepic = 0 # Indicates if pictures are saved or not
+savepic = 1 # Indicates if pictures are saved or not
 
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
-nx = ny = 60 # Boundary points
+nx = ny = 100 # Boundary points
 print("nx = ny = %d" %(nx))
 
 mesh = UnitSquareMesh(nx,ny)
