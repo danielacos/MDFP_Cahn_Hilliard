@@ -23,7 +23,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 T = 1.0            # final time
-num_steps = 20     # number of time steps
+num_steps = 50     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.01)
 gamma = Constant(1.0)

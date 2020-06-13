@@ -22,8 +22,8 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 1.0            # final time
-num_steps = 50     # number of time steps
+T = 0.05            # final time
+num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = 0.01
 gamma = 1.0
@@ -116,10 +116,10 @@ for i in range(num_steps):
     phi, w = u.split(True)
 
     # Plot solution
-    pic = plot(phi)
-    plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
-    plt.colorbar(pic)
-    plt.show()
+    #pic = plot(phi)
+    #plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
+    #plt.colorbar(pic)
+    #plt.show()
 
     # Compute the mass
     print('mass = %f' % (assemble(phi*dx)))
@@ -131,6 +131,12 @@ for i in range(num_steps):
     energy = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + pow(pow(phi,2)-1,2)*dx)
     E.append(energy)
     print('E =',energy)
+
+pic = plot(phi)
+plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
+plt.colorbar(pic)
+plt.show()
+
 
 plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
 plt.title("Funcional de energía")

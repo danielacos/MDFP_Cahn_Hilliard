@@ -22,11 +22,13 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 1.0            # final time
-num_steps = 50     # number of time steps
+T = 0.05            # final time
+num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = 0.01
 gamma = 1.0
+
+savepic = 1 # Indicates if pictures are saved or not
 
 print("dt = %f" %(dt))
 
@@ -53,9 +55,9 @@ class Init_u(UserExpression):
 phi_0 = Init_u(degree=deg) # Random values between -0.01 and 0.01
 phi_n = interpolate(phi_0,V)
 
-c = plot(phi_n)
+pic = plot(phi_n)
 plt.title("Condición inicial")
-plt.colorbar(c)
+plt.colorbar(pic)
 plt.show()
 
 print('max = %f' % (phi_n.vector().get_local().max()))
@@ -90,9 +92,9 @@ t = 0
 
 print("Iteraciones:")
 
-for n in range(num_steps):
+for i in range(num_steps):
 
-    print("\nIteración %d:" %(n))
+    print("\nIteración %d:" %(i+1))
 
     # Update current time
     t += dt
@@ -103,10 +105,13 @@ for n in range(num_steps):
     phi, w = u.split(True)
 
     # Plot solution
-    pic = plot(phi)
-    plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
-    plt.colorbar(pic)
-    plt.show()
+    if(savepic):
+        if(i==0 or i==(num_steps/2-1) or i==(num_steps-1)):
+            pic = plot(phi)
+            plt.title("Función de campo de fase en t = %.4f" %(t))
+            plt.colorbar(pic)
+            plt.savefig("fig/FEM-Eyre_nt-%d_t-%.2f.png" %(num_steps,t))
+            plt.close()
 
     # Compute the mass
     print('mass = %f' % (assemble(phi*dx)))
@@ -119,8 +124,15 @@ for n in range(num_steps):
     E.append(energy)
     print('E =',energy)
 
+pic = plot(phi)
+plt.title("Función de campo de fase en t = %.2f" %(t))
+plt.colorbar(pic)
+plt.show()
+
 plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
-plt.title("Funcional de energía")
+plt.title("Energía discreta")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")
+if(savepic):
+    plt.savefig("fig/FEM-Eyre_nt-%d_energia.png" %(num_steps))
 plt.show()
