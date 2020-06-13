@@ -22,12 +22,12 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 1.0            # final time
-num_steps = 50     # number of time steps
+T = 0.05            # final time
+num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.01)
 gamma = Constant(1.0)
-sigma = Constant(3.0) # penalty parameter
+sigma = Constant(4.0) # penalty parameter
 B  = Constant(1.0)
 
 savepic = 0 # Indicates if pictures are saved or not

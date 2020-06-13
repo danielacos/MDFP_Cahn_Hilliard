@@ -29,7 +29,7 @@ eps = 0.01
 gamma = 1.0
 sigma = Constant(4.0) # penalty parameter
 
-savepic = 1 # Indicates if pictures are saved or not
+savepic = 0 # Indicates if pictures are saved or not
 
 print("dt = %f" %(dt))
 
