@@ -29,6 +29,8 @@ eps = 0.01
 gamma = 1.0
 B = 1.0
 
+savepic = 0 # Indicates if pictures are saved or not
+
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
@@ -117,10 +119,13 @@ for i in range(num_steps):
     phi, w = u.split(True)
 
     # Plot solution
-    #pic = plot(phi,mode='color')
-    #plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
-    #plt.colorbar(pic)
-    #plt.show()
+    if(savepic):
+        if(i==0 or i==(num_steps/2-1) or i==(num_steps-1)):
+            pic = plot(phi)
+            plt.title("Función de campo de fase en t = %.4f" %(t))
+            plt.colorbar(pic)
+            plt.savefig("fig/FEM-EQ_nt-%d_t-%.4f.png" %(num_steps,t))
+            plt.close()
 
     # Compute the mass
     print('mass = %f' % (assemble(phi*dx)))
@@ -145,7 +150,7 @@ for i in range(num_steps):
     print('E =',energy)
 
 pic = plot(phi)
-plt.title("Función de fase en t = %.2f" %(t))
+plt.title("Función de campo de fase en t = %.4f" %(t))
 plt.colorbar(pic)
 plt.show()
 
@@ -154,4 +159,6 @@ plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
 plt.title("Energía discreta")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")
+if(savepic):
+    plt.savefig("fig/FEM-EQ_nt-%d_energia.png" %(num_steps))
 plt.show()

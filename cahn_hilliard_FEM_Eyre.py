@@ -28,7 +28,7 @@ dt = T / num_steps # time step size
 eps = 0.01
 gamma = 1.0
 
-savepic = 1 # Indicates if pictures are saved or not
+savepic = 0 # Indicates if pictures are saved or not
 
 print("dt = %f" %(dt))
 
@@ -110,7 +110,7 @@ for i in range(num_steps):
             pic = plot(phi)
             plt.title("Función de campo de fase en t = %.4f" %(t))
             plt.colorbar(pic)
-            plt.savefig("fig/FEM-Eyre_nt-%d_t-%.2f.png" %(num_steps,t))
+            plt.savefig("fig/FEM-Eyre_nt-%d_t-%.4f.png" %(num_steps,t))
             plt.close()
 
     # Compute the mass

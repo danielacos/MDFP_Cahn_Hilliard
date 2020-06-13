@@ -30,6 +30,8 @@ gamma = Constant(1.0)
 sigma = Constant(3.0) # penalty parameter
 B  = Constant(1.0)
 
+savepic = 0 # Indicates if pictures are saved or not
+
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
@@ -130,10 +132,13 @@ for i in range(num_steps):
     #fa.assign([phi, w], u)
 
     # Plot solution
-    #pic = plot(phi)
-    #plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
-    #plt.colorbar(pic)
-    #plt.show()
+    if(savepic):
+        if(i==0 or i==(num_steps/2-1) or i==(num_steps-1)):
+            pic = plot(phi)
+            plt.title("Función de campo de fase en t = %.4f" %(t))
+            plt.colorbar(pic)
+            plt.savefig("fig/DG-EQ_nt-%d_t-%.4f.png" %(num_steps,t))
+            plt.close()
 
     # Compute the mass
     print('mass = %f' % (assemble(phi * dx)))
@@ -150,11 +155,14 @@ for i in range(num_steps):
     print('E =',energy)
 
 pic = plot(phi)
-plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
+plt.title("Función de campo de fase en t = %.4f" %(t))
 plt.colorbar(pic)
 plt.show()
+
 plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
-plt.title("Funcional de energía")
+plt.title("Energía discreta")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")
+if(savepic):
+    plt.savefig("fig/DG-EQ_nt-%d_energia.png" %(num_steps))
 plt.show()
