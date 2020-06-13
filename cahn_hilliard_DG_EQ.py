@@ -155,12 +155,10 @@ for i in range(num_steps):
     phi_n.assign(phi)
 
     # Compute the energy
-    E_EQ = []
     energyEQ = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + pow(U_n,2) * dx)
     E_EQ.append(energyEQ)
     print('E_EQ =',energyEQ)
 
-    E = []
     energy = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + pow(pow(phi_n,2)-1,2) * dx)
     E.append(energy)
     print('E =',energy)
