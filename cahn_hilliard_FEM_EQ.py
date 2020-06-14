@@ -34,7 +34,7 @@ savepic = 0 # Indicates if pictures are saved or not
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
-nx = ny = 500 # Boundary points
+nx = ny = 100 # Boundary points
 print("nx = ny = %d" %(nx))
 
 mesh = UnitSquareMesh(nx,ny)
