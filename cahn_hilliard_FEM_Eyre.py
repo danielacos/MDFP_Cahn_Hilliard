@@ -66,7 +66,7 @@ print('mass = %f' % (assemble(phi_n*dx)))
 
 # Define the energy vector
 E = []
-energy = assemble(0.5*pow(eps,2)*dot(grad(phi_n),grad(phi_n))*dx + pow(pow(phi_n,2)-1,2)*dx)
+energy = assemble(0.5*pow(eps,2)*dot(grad(phi_n),grad(phi_n))*dx + 0.25 * pow(pow(phi_n,2)-1,2)*dx)
 E.append(energy)
 print('E =',energy)
 
@@ -120,7 +120,7 @@ for i in range(num_steps):
     phi_n.assign(phi)
 
     # Compute the energy
-    energy = assemble(0.5*pow(eps,2)*dot(grad(phi),grad(phi))*dx + pow(pow(phi,2)-1,2)*dx)
+    energy = assemble(0.5*pow(eps,2)*dot(grad(phi),grad(phi))*dx + 0.25 * pow(pow(phi,2)-1,2)*dx)
     E.append(energy)
     print('E =',energy)
 
