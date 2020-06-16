@@ -117,8 +117,11 @@ for i in range(num_steps):
     # Update current time
     t += dt
 
+    # Update source term
     g1.t = t
     g2.t = t
+    s.g1 = g1
+    s.g2 = g2
 
     # Compute solution
     solve(a == L, u)
