@@ -21,7 +21,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def test():
-    T = 0.01            # final time
+    T = 1.0            # final time
     num_steps = 2000     # number of time steps
     dt = T / num_steps # time step size
     eps = Constant(0.1)
@@ -163,7 +163,8 @@ def test():
     plt.colorbar(pic)
     plt.show()
 
-    print("Error en norma L2 = %f" %(assemble(pow(phi-g1,2)*dx)))
+    print("Error en norma L2 = %f" %(sqrt(assemble(pow(phi-g1,2)*dx))))
+    print("Error en norma L_inf = %f" %(np.abs(phi.vector().get_local() - interpolate(g1,V).vector().get_local()).max()))
 
     plt.plot(np.linspace(0,T,num_steps+1),E, '--', color='blue')
     plt.title("Funcional de energía")
