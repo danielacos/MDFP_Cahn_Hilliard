@@ -21,8 +21,8 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 0.01            # final time
-num_steps = 1000     # number of time steps
+T = 0.1            # final time
+num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -32,7 +32,7 @@ B  = Constant(1.0)
 print("dt = %d" %(dt))
 
 # Create mesh and define function space
-nx = ny = 7 # Boundary points
+nx = ny = 100 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -40,7 +40,7 @@ mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
 plot(mesh)
 plt.show()
 
-deg = 1 # Degree of polynomials in discrete space
+deg = 2 # Degree of polynomials in discrete space
 P = FiniteElement('DG', mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
 V = FunctionSpace(mesh, P)
@@ -70,6 +70,7 @@ U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define function H
 H = project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
+H2 = project(pow((pow(phi_n,3) - phi_n),2)/(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define the energy vector
 E = []
@@ -140,8 +141,9 @@ for i in range(num_steps):
 
     # Update previous solution
     U_n.assign(project(U_n+ 0.5 * H * (phi - phi_n ),V))
-    H.assign(project((pow(phi ,3) - phi)/sqrt(0.25 * pow(pow(phi,2) - 1.0,2) + B),V))
     phi_n.assign(phi)
+    H.assign(project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V))
+    H2.assign(project(pow((pow(phi_n,3) - phi_n),2)/(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V))
 
     # Compute the energy
     energy = assemble(0.5*pow(eps,2)*(dot(grad(phi),grad(phi))*dx - 2.0 * dot(avg(grad(phi)),n('+'))*jump(phi) * dS  + sigma/h('+') * pow(jump(phi),2) * dS) + pow(U_n,2) * dx)
@@ -155,7 +157,7 @@ plt.show()
 
 print("Error en norma L2 = %f" %(assemble(pow(phi-g1,2)*dx)))
 
-plt.plot(np.linspace(0,T,num_steps+1),E, color='red')
+plt.plot(np.linspace(0,T,num_steps+1),E, '--',color='blue')
 plt.title("Funcional de energía")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")

@@ -22,7 +22,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 T = 0.1            # final time
-num_steps = 1000     # number of time steps
+num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -96,9 +96,9 @@ a2 = w * barphi * dx \
     - dot(avg(grad(phi)),n('+'))*jump(barphi) * dS \
     - dot(avg(grad(barphi)),n('+'))*jump(phi) * dS \
     + sigma/h('+') * dot(jump(phi), jump(barphi)) * dS) \
-    - 0.5 * pow(H,2) * phi * barphi * dx
+    - 0.5 * H2 * phi * barphi * dx
 L2 = H * U_n * barphi * dx \
-    - 0.5 * pow(H,2) * phi_n * barphi * dx
+    - 0.5 * H2 * phi_n * barphi * dx
 
 a = a1 + a2
 L = L1 + L2
