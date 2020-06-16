@@ -21,7 +21,7 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 0.1            # final time
+T = 1            # final time
 num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
@@ -32,7 +32,7 @@ B  = Constant(1.0)
 print("dt = %d" %(dt))
 
 # Create mesh and define function space
-nx = ny = 100 # Boundary points
+nx = ny = 31 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -148,9 +148,10 @@ plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
 
-print("Error en norma L2 = %f" %(assemble(pow(phi-g1,2)*dx)))
+print("Error en norma L2 = %f" %(sqrt(assemble(pow(phi-g1,2)*dx))))
+print("Error en norma L_inf = %f" %(np.abs(phi.vector().get_local() - interpolate(g1,V).vector().get_local()).max()))
 
-plt.plot(np.linspace(0,T,num_steps+1),E, '--',color='blue')
+plt.plot(np.linspace(0,T,num_steps+1),E,color='red')
 plt.title("Funcional de energía")
 plt.xlabel("Tiempo")
 plt.ylabel("Energía")
