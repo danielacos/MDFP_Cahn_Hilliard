@@ -77,6 +77,7 @@ U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define function H
 H = project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
+H2 = project(pow((pow(phi_n,3) - phi_n),2)/(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define the energy vector
 E_EQ = []
@@ -109,9 +110,9 @@ a2 = w * barphi * dx \
     - dot(avg(grad(phi)),n('+'))*jump(barphi) * dS \
     - dot(avg(grad(barphi)),n('+'))*jump(phi) * dS \
     + sigma/h('+') * dot(jump(phi), jump(barphi)) * dS) \
-    - 0.5 * pow(H,2) * phi * barphi * dx
+    - 0.5 * H2 * phi * barphi * dx
 L2 = H * U_n * barphi * dx \
-    - 0.5 * pow(H,2) * phi_n * barphi * dx
+    - 0.5 * H2 * phi_n * barphi * dx
 
 a = a1 + a2
 L = L1 + L2
@@ -153,8 +154,9 @@ for i in range(num_steps):
 
     # Update previous solution
     U_n.assign(project(U_n+ 0.5 * H * (phi - phi_n ),V))
-    H.assign(project((pow(phi ,3) - phi)/sqrt(0.25 * pow(pow(phi,2) - 1.0,2) + B),V))
     phi_n.assign(phi)
+    H.assign(project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V))
+    H2.assign(project(pow((pow(phi_n,3) - phi_n),2)/(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V))
 
     # Compute the energy
     energyEQ = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + pow(U_n,2) * dx)
