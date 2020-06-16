@@ -30,7 +30,7 @@ gamma = Constant(1.0)
 sigma = Constant(4.0) # penalty parameter
 B  = Constant(1.0)
 
-savepic = 0 # Indicates if pictures are saved or not
+savepic = 1 # Indicates if pictures are saved or not
 
 print("dt = %f" %(dt))
 
@@ -140,7 +140,7 @@ for i in range(num_steps):
 
     # Plot solution
     if(savepic):
-        if(i==0 or i==(num_steps/2-1) or i==(num_steps-1)):
+        if(i==4 or i==(num_steps/2-1) or i==(num_steps-1)):
             pic = plot(phi)
             plt.title("Función de campo de fase en t = %.4f" %(t))
             plt.colorbar(pic)

@@ -127,7 +127,7 @@ for i in range(num_steps):
 
     # Plot solution
     if(savepic):
-        if(i==0 or i==(num_steps/2-1) or i==(num_steps-1)):
+        if(i==4 or i==(num_steps/2-1) or i==(num_steps-1)):
             pic = plot(phi)
             plt.title("Función de campo de fase en t = %.4f" %(t))
             plt.colorbar(pic)
