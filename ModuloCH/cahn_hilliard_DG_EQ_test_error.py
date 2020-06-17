@@ -22,11 +22,11 @@ import matplotlib.pyplot as plt
 
 def test():
     T = 1.0            # final time
-    num_steps = 2000     # number of time steps
+    num_steps = 1000     # number of time steps
     dt = T / num_steps # time step size
     eps = Constant(0.1)
     gamma = Constant(1.0)
-    sigma = Constant(3.0) # penalty parameter
+    sigma = Constant(4.0) # penalty parameter
     B  = Constant(1.0)
 
     print("dt = %f"  %(dt))
