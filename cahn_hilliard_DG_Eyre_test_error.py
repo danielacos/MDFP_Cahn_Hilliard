@@ -51,7 +51,7 @@ h = CellDiameter(mesh)
 # Source term
 g1 = Expression('0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])', degree = deg, t=0) # exact solution
 g2 = Expression('pow(0.1 * exp(-0.25 * t) * cos(0.5 * x[0]) * sin(0.5 * x[1]),2) + pow(0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * cos(0.5 * x[1]),2)',degree=deg, t=0)
-s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * g1 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
+s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
 
 # Initial data
 

@@ -22,17 +22,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 T = 0.01            # final time
-num_steps = 10     # number of time steps
+num_steps = 100     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
-sigma = Constant(3.0) # penalty parameter
+sigma = Constant(10.0) # penalty parameter
 B  = Constant(1.0)
 
-print("dt = %d" %(dt))
+print("dt = %f" %(dt))
 
 # Create mesh and define function space
-nx = ny = 32 # Boundary points
+nx = ny = 64 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -40,7 +40,9 @@ mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
 plot(mesh)
 plt.show()
 
-deg = 1 # Degree of polynomials in discrete space
+print("h = %f" %(mesh.hmax()))
+
+deg = 2 # Degree of polynomials in discrete space
 P = FiniteElement('DG', mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
 V = FunctionSpace(mesh, P)
@@ -51,7 +53,7 @@ h = CellDiameter(mesh)
 # Source term
 g1 = Expression('0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])', degree = deg, t=0) # exact solution
 g2 = Expression('pow(0.1 * exp(-0.25 * t) * cos(0.5 * x[0]) * sin(0.5 * x[1]),2) + pow(0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * cos(0.5 * x[1]),2)',degree=deg, t=0)
-s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * g1 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
+s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
 
 # Initial data
 
@@ -102,9 +104,9 @@ a2 = w * barphi * dx \
     - dot(avg(grad(phi)),n('+'))*jump(barphi) * dS \
     - dot(avg(grad(barphi)),n('+'))*jump(phi) * dS \
     + sigma/h('+') * dot(jump(phi), jump(barphi)) * dS) \
-    - 0.5 * pow(H,2) * phi * barphi * dx
+    - 0.5 * H2 * phi * barphi * dx
 L2 = H * U_n * barphi * dx \
-    - 0.5 * pow(H,2) * phi_n * barphi * dx
+    - 0.5 * H2 * phi_n * barphi * dx
 
 a = a1 + a2
 L = L1 + L2
@@ -167,8 +169,8 @@ plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
 
-print("Error en norma L2 = %f" %(sqrt(assemble(pow(phi-g1,2)*dx))))
-print("Error en norma L_inf = %f" %(np.abs(phi.vector().get_local() - interpolate(g1,V).vector().get_local()).max()))
+print("Error en norma L2 = %.10f" %(sqrt(assemble(pow(phi-g1,2)*dx))))
+print("Error en norma L_inf = %.10f" %(np.abs(phi.vector().get_local() - interpolate(g1,V).vector().get_local()).max()))
 
 plt.plot(np.linspace(0,T,num_steps+1),E, color='red', label="Energía natural")
 plt.plot(np.linspace(0,T,num_steps+1),E_EQ, '--', color='blue', label="Energia modificada")
