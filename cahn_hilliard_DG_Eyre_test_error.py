@@ -40,6 +40,8 @@ mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
 plot(mesh)
 plt.show()
 
+print("h = %f" %(mesh.hmax()))
+
 deg = 2 # Degree of polynomials in discrete space
 P = FiniteElement('DG', mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
