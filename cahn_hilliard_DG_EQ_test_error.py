@@ -21,8 +21,8 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 0.01            # final time
-num_steps = 10     # number of time steps
+T = 0.05            # final time
+num_steps = 500     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -32,7 +32,7 @@ B  = Constant(1.0)
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
-nx = ny = 32 # Boundary points
+nx = ny = 8 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")

@@ -21,8 +21,8 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 0.01           # final time
-num_steps = 100     # number of time steps
+T = 0.05           # final time
+num_steps = 1000     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -30,7 +30,7 @@ gamma = Constant(1.0)
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
-nx = ny = 8 # Boundary points
+nx = ny = 16 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -40,7 +40,7 @@ plt.show()
 
 print("h = %f" %(mesh.hmax()))
 
-deg = 1 # Degree of polynomials in discrete space
+deg = 2 # Degree of polynomials in discrete space
 P = FiniteElement("Lagrange", mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
 V = FunctionSpace(mesh, P)
@@ -49,6 +49,7 @@ V = FunctionSpace(mesh, P)
 g1 = Expression('0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])', degree = deg, t=0) # exact solution
 g2 = Expression('pow(0.1 * exp(-0.25 * t) * cos(0.5 * x[0]) * sin(0.5 * x[1]),2) + pow(0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * cos(0.5 * x[1]),2)',degree=deg, t=0)
 s = Expression('- 0.25 * g1 + pow(eps,2) * g1 * 0.25 - 1.5 * g1 * g2 + 1.5 * pow(g1,3) - 0.5 * g1', degree=deg, g1=g1, g2=g2, eps=eps) # source term
+#s = Expression('- 0.25 * (0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])) + pow(eps,2) * (0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])) * 0.25 - 1.5 * (0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])) * (pow(0.1 * exp(-0.25 * t) * cos(0.5 * x[0]) * sin(0.5 * x[1]),2) + pow(0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * cos(0.5 * x[1]),2)) + 1.5 * pow(0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1]),3) - 0.5 * (0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1]))', degree=deg, t=0, eps=eps) # source term
 
 # Initial data
 
@@ -103,6 +104,7 @@ for i in range(num_steps):
     g2.t = t
     s.g1 = g1
     s.g2 = g2
+    #s.t = t
 
     # Compute solution
     solve(a == L, u)

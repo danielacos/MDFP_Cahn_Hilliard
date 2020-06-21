@@ -21,8 +21,8 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 1            # final time
-num_steps = 100     # number of time steps
+T = 0.05            # final time
+num_steps = 500     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -31,7 +31,7 @@ B  = Constant(1.0)
 print("dt = %d" %(dt))
 
 # Create mesh and define function space
-nx = ny = 31 # Boundary points
+nx = ny = 64 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -41,13 +41,10 @@ plt.show()
 
 print("h = %f" %(mesh.hmax()))
 
-deg = 2 # Degree of polynomials in discrete space
-P = FiniteElement('DG', mesh.ufl_cell(), deg) # Space of polynomials
+deg = 1 # Degree of polynomials in discrete space
+P = FiniteElement("Lagrange", mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
 V = FunctionSpace(mesh, P)
-
-n = FacetNormal(mesh)
-h = CellDiameter(mesh)
 
 # Source term
 g1 = Expression('0.1 * exp(-0.25 * t) * sin(0.5 * x[0]) * sin(0.5 * x[1])', degree = deg, t=0) # exact solution
@@ -92,18 +89,12 @@ phi, w = split(u)
 barw, barphi = split(v)
 
 a1 = phi * barw * dx \
-    + dt * gamma * (dot(grad(w),grad(barw)) * dx \
-    - dot(avg(grad(w)),n('+'))*jump(barw) * dS \
-    - dot(avg(grad(barw)),n('+'))*jump(w) * dS \
-    + sigma/h('+') * dot(jump(w), jump(barw)) * dS)
+    + dt * gamma * dot(grad(w),grad(barw)) * dx
 L1 = phi_n * barw * dx + dt * s * barw * dx
 
 a2 = w * barphi * dx \
-    - pow(eps,2) * (dot(grad(phi),grad(barphi))*dx \
-    - dot(avg(grad(phi)),n('+'))*jump(barphi) * dS \
-    - dot(avg(grad(barphi)),n('+'))*jump(phi) * dS \
-    + sigma/h('+') * dot(jump(phi), jump(barphi)) * dS) \
-    - 0.5 * H2 * phi * barphi * dx
+     - pow(eps,2) * dot(grad(phi),grad(barphi)) * dx \
+     - 0.5 * H2 * phi * barphi * dx
 L2 = H * U_n * barphi * dx \
     - 0.5 * H2 * phi_n * barphi * dx
 

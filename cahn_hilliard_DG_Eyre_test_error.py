@@ -21,18 +21,18 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 1            # final time
-num_steps = 100     # number of time steps
+T = 0.05            # final time
+num_steps = 500     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
-sigma = Constant(10.0) # penalty parameter
+sigma = Constant(4.0) # penalty parameter
 B  = Constant(1.0)
 
 print("dt = %d" %(dt))
 
 # Create mesh and define function space
-nx = ny = 31 # Boundary points
+nx = ny = 64 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -42,7 +42,7 @@ plt.show()
 
 print("h = %f" %(mesh.hmax()))
 
-deg = 2 # Degree of polynomials in discrete space
+deg = 1 # Degree of polynomials in discrete space
 P = FiniteElement('DG', mesh.ufl_cell(), deg) # Space of polynomials
 W = FunctionSpace(mesh, MixedElement([P,P])) # Space of functions
 V = FunctionSpace(mesh, P)
@@ -70,7 +70,7 @@ print('mass = %f' % (assemble(phi_n*dx)))
 
 # Define the energy vector
 E = []
-energy = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + pow(U_n,2) * dx)
+energy = assemble(0.5*pow(eps,2)*(dot(grad(phi_n),grad(phi_n))*dx - 2.0 * dot(avg(grad(phi_n)),n('+'))*jump(phi_n) * dS  + sigma/h('+') * pow(jump(phi_n),2) * dS) + 0.25 * pow(pow(phi_n,2)-1,2)*dx)
 E.append(energy)
 print('E =',energy)
 
@@ -141,7 +141,7 @@ for i in range(num_steps):
     phi_n.assign(phi)
 
     # Compute the energy
-    energy = assemble(0.5*pow(eps,2)*(dot(grad(phi),grad(phi))*dx - 2.0 * dot(avg(grad(phi)),n('+'))*jump(phi) * dS  + sigma/h('+') * pow(jump(phi),2) * dS) + pow(U_n,2) * dx)
+    energy = assemble(0.5*pow(eps,2)*(dot(grad(phi),grad(phi))*dx - 2.0 * dot(avg(grad(phi)),n('+'))*jump(phi) * dS  + sigma/h('+') * pow(jump(phi),2) * dS) + 0.25 * pow(pow(phi_n,2)-1,2)*dx)
     E.append(energy)
     print('E =',energy)
 
