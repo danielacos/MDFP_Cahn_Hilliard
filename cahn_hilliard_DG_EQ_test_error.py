@@ -21,8 +21,8 @@ from fenics import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-T = 0.05            # final time
-num_steps = 500     # number of time steps
+T = 0.1            # final time
+num_steps = 1000     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -32,7 +32,7 @@ B  = Constant(1.0)
 print("dt = %f" %(dt))
 
 # Create mesh and define function space
-nx = ny = 8 # Boundary points
+nx = ny = 120 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
@@ -169,8 +169,8 @@ plt.title("Ecuación de Cahn-Hilliard en t = %.2f" %(t))
 plt.colorbar(pic)
 plt.show()
 
-print("Error en norma L2 = %.10f" %(sqrt(assemble(pow(phi-g1,2)*dx))))
-print("Error en norma L_inf = %.10f" %(np.abs(phi.vector().get_local() - interpolate(g1,V).vector().get_local()).max()))
+print("Error en norma L2 = %.5e" %(sqrt(assemble(pow(phi-g1,2)*dx))))
+print("Error en norma L_inf = %.5e" %(np.abs(phi.vector().get_local() - interpolate(g1,V).vector().get_local()).max()))
 
 plt.plot(np.linspace(0,T,num_steps+1),E, color='red', label="Energía natural")
 plt.plot(np.linspace(0,T,num_steps+1),E_EQ, '--', color='blue', label="Energia modificada")
