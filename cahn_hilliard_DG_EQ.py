@@ -30,7 +30,7 @@ gamma = Constant(1.0)
 sigma = Constant(4.0) # penalty parameter
 B  = Constant(1.0)
 
-savepic = 1 # Indicates if pictures are saved or not
+savepic = 0 # Indicates if pictures are saved or not
 
 print("dt = %f" %(dt))
 
@@ -73,6 +73,7 @@ print('max = %f' % (phi_n.vector().get_local().max()))
 print('min = %f' % (phi_n.vector().get_local().min()))
 print('mass = %f' % (assemble(phi_n*dx)))
 
+# Define function U
 U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define function H

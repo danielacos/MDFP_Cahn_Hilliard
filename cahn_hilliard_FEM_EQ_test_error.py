@@ -14,7 +14,7 @@ E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega U^2
 
 in each time step.
 
-DG semidiscrete space scheme and EQ semidicrete time scheme
+FEM semidiscrete space scheme and EQ semidicrete time scheme
 """
 
 from fenics import *
@@ -64,6 +64,7 @@ print('max = %f' % (phi_n.vector().get_local().max()))
 print('min = %f' % (phi_n.vector().get_local().min()))
 print('mass = %f' % (assemble(phi_n*dx)))
 
+# Define function U
 U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define function H

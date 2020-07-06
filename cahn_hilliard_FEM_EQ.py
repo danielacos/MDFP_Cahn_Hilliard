@@ -67,13 +67,10 @@ print('max = %f' % (phi_n.vector().get_local().max()))
 print('min = %f' % (phi_n.vector().get_local().min()))
 print('mass = %f' % (assemble(phi_n*dx)))
 
-#U_n = Expression('sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B)',degree=deg, phi_n=phi_n, B=B)
+# Define function U
 U_n = project(sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
 # Define function H
-#H = Expression('(pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B)',degree = deg, phi_n=phi_n, B=B)
-#H2 = Expression('pow((pow(phi_n,3) - phi_n),2)/(0.25 * pow(pow(phi_n,2) - 1.0,2) + B)', degree = deg, phi_n=phi_n, B=B)
-
 H = project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 H2 = project(pow((pow(phi_n,3) - phi_n),2)/(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V)
 
@@ -138,14 +135,6 @@ for i in range(num_steps):
     print('mass = %f' % (assemble(phi*dx)))
 
     # Update previous solution
-    #if(i==1):
-    #    U_n = Expression('U_0 + 0.5 * H * (phi - phi_n)', degree=deg, U_0=U_n, H=H, phi_n=phi_n, phi=phi)
-    #else:
-    #    U_n.U_0=U_n
-    #phi_n.assign(phi)
-    #H.phi_n=phi_n
-    #H2.phi_n=phi_n
-
     U_n.assign(project(U_n + 0.5 * H * (phi - phi_n),V))
     phi_n.assign(phi)
     H.assign(project((pow(phi_n,3) - phi_n)/sqrt(0.25 * pow(pow(phi_n,2) - 1.0,2) + B),V))

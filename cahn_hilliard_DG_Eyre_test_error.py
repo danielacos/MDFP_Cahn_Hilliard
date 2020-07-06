@@ -14,7 +14,7 @@ E = epsilon^2/2 * \int_\Omega |\nabla \phi|^2 + \int_\Omega U^2
 
 in each time step.
 
-DG semidiscrete space scheme and EQ semidicrete time scheme
+DG semidiscrete space scheme and Eyre semidicrete time scheme
 """
 
 from fenics import *
@@ -22,7 +22,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 T = 0.1            # final time
-num_steps = 10     # number of time steps
+num_steps = 200     # number of time steps
 dt = T / num_steps # time step size
 eps = Constant(0.1)
 gamma = Constant(1.0)
@@ -32,7 +32,7 @@ B  = Constant(1.0)
 print("dt = %d" %(dt))
 
 # Create mesh and define function space
-nx = ny = 200 # Boundary points
+nx = ny = 155 # Boundary points
 print("nx = ny = %f" %(nx))
 
 mesh = RectangleMesh(Point(-pi,3*pi), Point(3 * pi, -pi), nx, ny, "right/left")
